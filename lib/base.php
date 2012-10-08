@@ -984,21 +984,23 @@ class F3 extends Base {
 					elseif (isset($parts[3]) && $parts[3]) {
 						$parts[4]=preg_replace('/(?<=")(.+?)(?=")/',
 							"\x00\\1",$parts[4]);
-						// Key-value pair
+                        // multiline string
+                        $mval = trim($parts[4]);
+                        if($mval == '(') {
+                            for($mp=$p+1;$mp<$ml;++$mp){
+                                if(trim($ini[$mp]) == ')') break;
+                                $mval.=$ini[$mp];
+                            }
+                            $csv = str_getcsv(substr(trim($mval),1));
+                            $p = $mp;
+                        } else
+                        // Key-value pair
 						$csv=array_map(
-							function($val) use($p,$ini,$ml) {
+							function($val) {
 								$q='';
 								if ($val[0]=="\x00")
 									$q='"';
 								$val=trim($val);
-                                // multiline string
-                                if($val == '(') {
-                                    for($mp=$p+1;$mp<$ml;++$mp){
-                                        if(trim($ini[$mp]) == ')') break;
-                                        $val.=$ini[$mp];
-                                    }
-                                    $val = substr(trim($val),1);
-                                }
 								return is_numeric($val) ||
 									preg_match('/^\w+$/i',$val) &&
 									defined($val)?
