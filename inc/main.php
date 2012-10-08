@@ -579,6 +579,12 @@ class Main extends F3instance {
 			'String variable found',
 			'Missing string variable'
 		);
+		
+		$this->expect(
+            preg_replace("!(\r\n)|(\r)|(\n)!",'<br />',$this->get('mstr'))=='The quick brown fox<br />jumps over the lazy dog',
+            'Multiline String value found',
+            'Missing multiline string value'
+        );
 
 		$this->expect(
 			$this->get('hash')===array('x'=>1,'y'=>2,'z'=>3),

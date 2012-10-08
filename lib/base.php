@@ -972,9 +972,9 @@ class F3 extends Base {
 			$cfg=array();
 			$sec='';
 			if ($ini=file($file))
-				foreach ($ini as $line) {
+                for($p=0,$ml=count($ini);$p<$ml;++$p){
 					preg_match('/^\s*(?:(;)|\[(.+)\]|(.+?)\s*=\s*(.+))/',
-						$line,$parts);
+                        $ini[$p],$parts);
 					if (isset($parts[1]) && $parts[1])
 						// Comment
 						continue;
@@ -986,11 +986,19 @@ class F3 extends Base {
 							"\x00\\1",$parts[4]);
 						// Key-value pair
 						$csv=array_map(
-							function($val) {
+							function($val) use($p,$ini,$ml) {
 								$q='';
 								if ($val[0]=="\x00")
 									$q='"';
 								$val=trim($val);
+                                // multiline string
+                                if($val == '(') {
+                                    for($mp=$p+1;$mp<$ml;++$mp){
+                                        if(trim($ini[$mp]) == ')') break;
+                                        $val.=$ini[$mp];
+                                    }
+                                    $val = substr(trim($val),1);
+                                }
 								return is_numeric($val) ||
 									preg_match('/^\w+$/i',$val) &&
 									defined($val)?
@@ -1812,8 +1820,8 @@ class F3 extends Base {
 		// Hydrate framework variables
 		$base=implode('/',array_map('urlencode',
 			explode('/',self::fixslashes(
-			preg_replace('/\/[^\/]+/','',$_SERVER['SCRIPT_NAME'])))));
-		$scheme=PHP_SAPI=='cli'?
+		preg_replace('/\/[^\/]+/','',$_SERVER['SCRIPT_NAME'])))));
+	$scheme=PHP_SAPI=='cli'?
 			NULL:
 			isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']!='off' ||
 			isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
