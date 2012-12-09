@@ -192,7 +192,8 @@ class Mapper extends \DB\Cursor {
 		foreach ($result as &$row) {
 			foreach ($row as $field=>&$val) {
 				if (array_key_exists($field,$this->fields))
-					$val=$this->value($this->fields[$field]['type'],$val);
+					$val=($val===null)?null:
+						$this->value($this->fields[$field]['type'],$val);
 				elseif (array_key_exists($field,$this->adhoc))
 					$this->adhoc[$field]['value']=$val;
 				unset($val);
