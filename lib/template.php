@@ -318,7 +318,7 @@ class Template extends View {
 						if (preg_match('/^<(\/?)(?:F3:)?'.
 							'('.$this->tags.')\b'.
 							'((?:\h+[\w-]+\h*(?:=\h*(?:"(?:.+?)"|\'(?:.+?)\'))?|'.
-							'\h*\{\{.+\}\})*)'.
+							'\h*\{\{.+?\}\})*)'.
 							'\h*(\/?)>/is',substr($text,$ptr),$match)) {
 							if (strlen($tmp))
 								$node[]=$tmp;
