@@ -228,16 +228,16 @@ class Template extends Controller {
 					'email@address.com',
 			'<set>'
 		);
-		$tpl->extend('foo',
-			function($node) use($f3) {
-				return $f3->stringify($node);
-			}
-		);
 		$test->expect(
 			preg_replace('/[\t\r\n]/','',
 				$tpl->render('templates/test9.htm'))==
 				'<script type="text/javascript">var a=\'{{a}}\';</script>',
 			'<ignore>'
+		);
+		$tpl->extend('foo',
+			function ($node) use ($f3) {
+				return $f3->stringify($node);
+			}
 		);
 		$result = $tpl->render('templates/test10.htm');
 		$lines = array_map('trim', explode("\r\n",$result));
@@ -253,7 +253,7 @@ class Template extends Controller {
 		);
 		$test->expect(
 			isset($lines[2]) && $lines[2]==$f3->stringify(array('@attrib' =>
-				array('bar'=>'test3','disabled'),'test3')),
+				array('bar'=>'test3','disabled'=>NULL),'test3')),
 			'Custom tag with value-less parameter'
 		);
 		$test->expect(
@@ -273,7 +273,7 @@ class Template extends Controller {
 		);
 		$test->expect(
 			isset($lines[6]) && $lines[6]==$f3->stringify(array('@attrib' =>
-				array('bar'=>'bar','baz'=>'{{@baz}}'),'multiple params switched')),
+				array('bar'=>'baz','baz'=>'{{@abc}}'),'multiple params switched')),
 			'Custom tag with mixed parameter, switched'
 		);
 		$test->expect(
