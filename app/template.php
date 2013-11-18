@@ -310,8 +310,13 @@ class Template extends Controller {
 		);
 		$test->expect(
 			isset($lines[13]) && $lines[13]==$f3->stringify(array('@attrib' =>
-				array('bar'=>'test14'),'text node with {{@token}}')),
+				array('bar'=>'test14'),'this {{@token}} should NOT get resolved')),
 			'Custom tag with token content'
+		);
+		$test->expect(
+			isset($lines[14]) && $lines[14]==$f3->stringify(array('@attrib' =>
+				array('bar'=>'test15','baz'=>'abc'),'multi-line start tag')),
+			'Custom tag with multi-line start tag'
 		);
 		$f3->set('string','<test>');
 		$obj=new \stdclass;
