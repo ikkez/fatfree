@@ -807,9 +807,14 @@ class Base extends Prefab {
 								}
 							break;
 						case 'date':
-							return strftime(empty($mod) ||
-								$mod=='short'?'%x':'%A, %d %B %Y',
-								$args[$pos]);
+							if(!empty($mod) && substr($mod,0,6)=='custom' &&
+								preg_match('/\{(?<format>.+?)\}/',
+									$mod,$matches))
+								$format=$matches[1];
+							else
+								$format=empty($mod) || $mod=='short'
+									?'%x':'%A, %d %B %Y';
+							return strftime($format,$args[$pos]);
 						case 'time':
 							return strftime('%X',$args[$pos]);
 						default:
