@@ -636,7 +636,7 @@ class Base extends Prefab {
 	**/
 	function encode($str) {
 		return @htmlentities($str,$this->hive['BITMASK'],
-			$this->hive['ENCODING'],FALSE)?:$this->scrub($str);
+			$this->hive['ENCODING'])?:$this->scrub($str);
 	}
 
 	/**
